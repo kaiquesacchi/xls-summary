@@ -1,24 +1,33 @@
-import { defineConfig } from "eslint/config";
-import tseslint from "@electron-toolkit/eslint-config-ts";
-import eslintConfigPrettier from "@electron-toolkit/eslint-config-prettier";
 import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import eslintPluginReactRefresh from "eslint-plugin-react-refresh";
+import eslintPluginZodX from "eslint-plugin-zod-x";
+import cspell from "@cspell/eslint-plugin/recommended";
+import prettier from "eslint-plugin-prettier/recommended";
+import typescript from "typescript-eslint";
 
-export default defineConfig(
-  { ignores: ["**/node_modules", "**/dist", "**/out"] },
-  tseslint.configs.recommended,
+// eslint-disable-next-line @typescript-eslint/no-deprecated
+export default typescript.config([
+  typescript.configs.strictTypeChecked,
+  typescript.configs.stylisticTypeChecked,
+  cspell,
+  eslintPluginZodX.configs.recommended,
   eslintPluginReact.configs.flat.recommended,
   eslintPluginReact.configs.flat["jsx-runtime"],
   {
+    files: ["**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: [],
+        },
+      },
+    },
     settings: {
       react: {
         version: "detect",
       },
     },
-  },
-  {
-    files: ["**/*.{ts,tsx}"],
     plugins: {
       "react-hooks": eslintPluginReactHooks,
       "react-refresh": eslintPluginReactRefresh,
@@ -28,5 +37,5 @@ export default defineConfig(
       ...eslintPluginReactRefresh.configs.vite.rules,
     },
   },
-  eslintConfigPrettier,
-);
+  prettier, // Must be the last one
+]);
