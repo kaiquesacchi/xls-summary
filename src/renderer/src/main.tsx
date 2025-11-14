@@ -1,9 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import NiceModal from "@ebay/nice-modal-react";
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root");
+if (!root) throw new Error("No `root` element found");
+createRoot(root).render(
   <StrictMode>
-    <App />
-  </StrictMode>
+    <NiceModal.Provider>
+      <App />
+    </NiceModal.Provider>
+  </StrictMode>,
 );
