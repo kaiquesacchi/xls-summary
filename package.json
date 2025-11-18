@@ -18,7 +18,8 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "db:push": "drizzle-kit push --config src/drizzle/drizzle.config.ts"
   },
   "dependencies": {
     "@chakra-ui/icon": "3.2.0",
@@ -27,6 +28,8 @@
     "@ebay/nice-modal-react": "1.2.13",
     "@electron-toolkit/preload": "3.0.2",
     "@electron-toolkit/utils": "4.0.0",
+    "@libsql/client": "0.15.15",
+    "drizzle-orm": "0.44.7",
     "electron-updater": "6.6.2",
     "react-spreadsheet-import": "4.7.1",
     "zod": "4.1.12"
@@ -41,6 +44,7 @@
     "@typescript-eslint/eslint-plugin": "8.46.4",
     "@typescript-eslint/parser": "8.46.4",
     "@vitejs/plugin-react": "5.1.0",
+    "drizzle-kit": "0.31.7",
     "electron": "39.1.2",
     "electron-builder": "26.0.12",
     "electron-vite": "4.0.1",
