@@ -1,0 +1,13 @@
+{
+  "dictionaryDefinitions": [
+    {
+      "name": "pt-br",
+      "path": "node_modules/@cspell/dict-pt-br/pt_BR.trie.gz",
+      "description": "PT-BR dictionary"
+    }
+  ],
+  "dictionaries": [
+    "pt-br"
+  ],
+  "words": []
+}
