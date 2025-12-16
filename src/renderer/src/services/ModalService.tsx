@@ -16,15 +16,15 @@ function create<TProps extends object>(
 }
 
 /** Displays the modal */
-function show<T extends React.FC<NiceModalHocProps>>(
-  component: T,
-  props: Omit<React.ComponentProps<T>, "id">,
+function show<T extends object>(
+  component: React.FC<T & NiceModalHocProps>,
+  props: T,
 ) {
   void NiceModal.show(component, props);
 }
 
 /** Hides the modal */
-function hide(component: React.FC<NiceModalHocProps>) {
+function hide<T extends object>(component: React.FC<T & NiceModalHocProps>) {
   void NiceModal.hide(component);
 }
 

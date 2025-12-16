@@ -35,6 +35,7 @@ export default typescript.config([
     rules: {
       ...eslintPluginReactHooks.configs.recommended.rules,
       ...eslintPluginReactRefresh.configs.vite.rules,
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"]
     },
   },
   prettier, // Must be the last one

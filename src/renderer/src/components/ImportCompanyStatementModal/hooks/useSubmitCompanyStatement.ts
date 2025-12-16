@@ -1,8 +1,11 @@
 import { trpc } from "@renderer/utils/trpc/trpc.client";
 import { Result } from "react-spreadsheet-import/types/types";
 import * as z from "zod";
+import { ImportCompanyStatementModalProps } from "../types";
 
-export function useSubmitCompanyStatement() {
+export function useSubmitCompanyStatement(
+  input: ImportCompanyStatementModalProps,
+) {
   const importStatement = trpc.statements.importStatements.useMutation();
 
   return async function submitCompanyStatement(rawData: Result<string>) {
@@ -16,7 +19,7 @@ export function useSubmitCompanyStatement() {
     console.log(`Parsing successful: ${parsed.data.length.toString()} rows`);
     await importStatement
       .mutateAsync({
-        insuranceCompanyId: 1,
+        insuranceCompanyId: input.insuranceCompanyId,
         statement: parsed.data.slice(0, 100),
       })
       .then((data) => {

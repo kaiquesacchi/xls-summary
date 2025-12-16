@@ -1,5 +1,5 @@
 import { DatabasePanel } from "./components/DatabasePanel/DatabasePanel";
-import { openImportCompanyStatementModal } from "./components/ImportCompanyStatementModal";
+import { ImportPanel } from "./components/ImportPanel/ImportPanel";
 import { trpc } from "./utils/trpc/trpc.client";
 
 function App() {
@@ -7,17 +7,11 @@ function App() {
 
   return (
     <>
-      <button
-        onClick={() => {
-          openImportCompanyStatementModal();
-        }}
-      >
-        Importar planilha
-      </button>
       <pre>
         Conexão com o processo main: {JSON.stringify(health.data, null, 2)}
       </pre>
       <DatabasePanel />
+      <ImportPanel />
     </>
   );
 }
