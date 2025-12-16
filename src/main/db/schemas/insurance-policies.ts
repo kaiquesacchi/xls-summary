@@ -19,11 +19,11 @@ export const TABLE_InsurancePolicies = sqliteTable("insurance_policies", {
   policyHolderId: int()
     .notNull()
     .references(() => TABLE_PolicyHolders.id),
-  insuranceCompanyId: text()
+  insuranceCompanyId: int()
     .notNull()
     .references(() => TABLE_InsuranceCompanies.id),
-  insuranceConsultantId: text().references(() => TABLE_InsuranceConsultants.id),
-  investmentConsultantId: text().references(
+  insuranceConsultantId: int().references(() => TABLE_InsuranceConsultants.id),
+  investmentConsultantId: int().references(
     () => TABLE_InvestmentConsultants.id,
   ),
 });

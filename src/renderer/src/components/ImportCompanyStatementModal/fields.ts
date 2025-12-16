@@ -3,6 +3,9 @@ import { type Fields } from "react-spreadsheet-import";
 export const fields: Fields = [
   {
     key: "policyHolderName",
+    validations: [
+      { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
+    ],
     label: "Nome do Segurado",
     alternateMatches: ["Nome do Segurado", "Cliente"],
     fieldType: {
@@ -12,6 +15,9 @@ export const fields: Fields = [
   },
   {
     key: "policyHolderCpf",
+    validations: [
+      { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
+    ],
     label: "CPF do Segurado",
     alternateMatches: ["CPF do Segurado", "CPF"],
     fieldType: {
