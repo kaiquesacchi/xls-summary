@@ -64,7 +64,7 @@ export const fields: Fields = [
   {
     key: "paymentTimestamp",
     label: "Data do pagamento",
-    alternateMatches: ["Pagamento Segurado", "Vencimento"],
+    alternateMatches: ["Pagamento Comissão", "Vencimento"],
     fieldType: {
       type: "input",
     },

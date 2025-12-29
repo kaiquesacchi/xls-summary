@@ -1,7 +1,14 @@
 import { db } from "../db";
 import { TABLE_InsuranceCompanies } from "../schemas/insurance-companies";
 
-const insuranceCompanies = ["Azos", "Icatu"] as const;
+const insuranceCompanies = [
+  "Azos",
+  "Icatu",
+  "Mag",
+  "Omint",
+  "Prudential",
+  "Unimed",
+] as const;
 
 export async function seedInsuranceCompanies() {
   return db
