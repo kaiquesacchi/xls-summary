@@ -1,4 +1,5 @@
 import { DatabasePanel } from "./components/DatabasePanel/DatabasePanel";
+import { ExportPanel } from "./components/ExportPanel/ExportPanel";
 import { ImportPanel } from "./components/ImportPanel/ImportPanel";
 import { trpc } from "./utils/trpc/trpc.client";
 
@@ -12,6 +13,7 @@ function App() {
       </pre>
       <DatabasePanel />
       <ImportPanel />
+      <ExportPanel />
     </>
   );
 }
