@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import "react-spreadsheet-import";
 
 declare module "react-spreadsheet-import" {
