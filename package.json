@@ -19,6 +19,8 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
+    "db:migrate": "drizzle-kit migrate --config src/main/db/drizzle/drizzle.config.ts",
+    "db:generate": "drizzle-kit generate --config src/main/db/drizzle/drizzle.config.ts",
     "db:push": "drizzle-kit push --config src/main/db/drizzle/drizzle.config.ts"
   },
   "dependencies": {
@@ -34,8 +36,10 @@
     "@trpc/react-query": "11.7.1",
     "@trpc/server": "11.7.1",
     "date-fns": "4.1.0",
+    "dedent": "1.7.1",
     "drizzle-orm": "0.44.7",
     "electron-updater": "6.6.2",
+    "lodash": "4.17.21",
     "react-spreadsheet-import": "4.7.1",
     "trpc-electron": "0.1.2",
     "xlsx": "0.18.5",
@@ -46,6 +50,7 @@
     "@cspell/eslint-plugin": "9.2.0",
     "@electron-toolkit/tsconfig": "2.0.0",
     "@total-typescript/ts-reset": "^0.6.1",
+    "@types/lodash": "4.17.21",
     "@types/node": "24.10.1",
     "@types/react": "19.2.3",
     "@types/react-dom": "19.2.2",

@@ -20,7 +20,7 @@ export function useSubmitCompanyStatement(
     await importStatement
       .mutateAsync({
         insuranceCompanyId: input.insuranceCompanyId,
-        statement: parsed.data.slice(0, 50),
+        statement: parsed.data,
       })
       .then((data) => {
         console.log("THEN", data);

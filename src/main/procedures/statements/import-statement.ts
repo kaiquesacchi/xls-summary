@@ -8,6 +8,10 @@ import { TABLE_InsurancePolicies } from "../../db/schemas/insurance-policies";
 import { ResultService } from "../../../shared/services/ResultService";
 import { DateParsers } from "../../../shared/parsers/DateParsers";
 import { CurrencyParsers } from "../../../shared/parsers/CurrencyParsers";
+import chunk from "lodash/chunk";
+import { type ResultSet } from "@libsql/client";
+
+const CHUNK_SIZE = 50;
 
 const StatementRowSchema = z.object({
   /* -------------------------- Policy Holder data -------------------------- */
@@ -39,7 +43,7 @@ export const importStatements = procedure
   .mutation(async ({ input }) => {
     console.log(
       "Importing statement. First few rows:",
-      input.statement.slice(0, 5),
+      input.statement.slice(0, 2),
     );
 
     const upsertPolicyHoldersResult = await upsertPolicyHolders();
@@ -47,6 +51,7 @@ export const importStatements = procedure
     const insertPoliciesResult = await insertPolicies();
 
     return {
+      totalRows: input.statement.length,
       upsertPolicyHolders: upsertPolicyHoldersResult.ok
         ? upsertPolicyHoldersResult.value
         : upsertPolicyHoldersResult.error.error.message,
@@ -69,23 +74,30 @@ export const importStatements = procedure
 
       if (!policyHolders.length) {
         // Prevents DB crash when inserting empty array
-        console.log("No policy holders to upsert");
-        return ResultService.ok("0/0");
+        return ResultService.ok("[0/0] No policy-holders' data on spreadsheet");
       }
 
-      console.log(`Inserting ${policyHolders.length} policy holders...`);
+      console.log(`Inserting [${policyHolders.length}] policy holders...`);
 
       const result = await ResultService.fromPromise(
-        db
-          .insert(TABLE_PolicyHolders)
-          .values(policyHolders)
-          .onConflictDoUpdate({
-            target: TABLE_PolicyHolders.cpf,
-            setWhere: isNull(TABLE_PolicyHolders.name),
-            set: {
-              name: TABLE_PolicyHolders.name,
-            },
-          }),
+        db.transaction(async (tx) => {
+          const chunks = chunk(policyHolders, CHUNK_SIZE);
+          const upsertResults: ResultSet[] = [];
+          for (const c of chunks) {
+            const chunkUpsertResult = await tx
+              .insert(TABLE_PolicyHolders)
+              .values(c)
+              .onConflictDoUpdate({
+                target: TABLE_PolicyHolders.cpf,
+                setWhere: isNull(TABLE_PolicyHolders.name),
+                set: {
+                  name: TABLE_PolicyHolders.name,
+                },
+              });
+            upsertResults.push(chunkUpsertResult);
+          }
+          return upsertResults;
+        }),
         (error) => ({
           origin: "upsertPolicyHolders",
           type: "Database error: upsert policy holders",
@@ -94,8 +106,14 @@ export const importStatements = procedure
       );
 
       if (!result.ok) return result;
+
+      const rowsAffected = result.value.reduce(
+        (acc, r) => acc + r.rowsAffected,
+        0,
+      );
+
       return ResultService.ok(
-        `${result.value.rowsAffected}/${input.statement.length}`,
+        `[${rowsAffected}/${policyHolders.length}] Upserted policy holders`,
       );
     }
 
@@ -116,18 +134,28 @@ export const importStatements = procedure
       if (!insuranceConsultants.length) {
         // Prevents DB crash when inserting empty array
         console.log("No insurance consultants to upsert");
-        return ResultService.ok("0/0");
+        return ResultService.ok(
+          "[0/0] No insurance-consultants' data on spreadsheet",
+        );
       }
 
       console.log(
-        `Inserting ${insuranceConsultants.length} insurance consultants...`,
+        `Inserting [${insuranceConsultants.length}] insurance consultants...`,
       );
 
       const result = await ResultService.fromPromise(
-        db
-          .insert(TABLE_InsuranceConsultants)
-          .values(insuranceConsultants)
-          .onConflictDoNothing(),
+        db.transaction(async (tx) => {
+          const chunks = chunk(insuranceConsultants, CHUNK_SIZE);
+          const upsertResults: ResultSet[] = [];
+          for (const c of chunks) {
+            const chunkUpsertResult = await tx
+              .insert(TABLE_InsuranceConsultants)
+              .values(c)
+              .onConflictDoNothing();
+            upsertResults.push(chunkUpsertResult);
+          }
+          return upsertResults;
+        }),
         (error) => ({
           origin: "upsertPolicyHolders",
           type: "Database error: insert insurance consultants",
@@ -136,8 +164,14 @@ export const importStatements = procedure
       );
 
       if (!result.ok) return result;
+
+      const rowsAffected = result.value.reduce(
+        (acc, r) => acc + r.rowsAffected,
+        0,
+      );
+
       return ResultService.ok(
-        `${result.value.rowsAffected}/${input.statement.length}`,
+        `[${rowsAffected}/${insuranceConsultants.length}] inserted insurance consultants`,
       );
     }
 
@@ -147,14 +181,31 @@ export const importStatements = procedure
       const policyHoldersMap = await getPolicyHoldersMap();
       const { formattedPolicies, incompletePolicies } = formatPolicies();
 
+      if (!formattedPolicies.length) {
+        return ResultService.ok(
+          `[0/0] No policies to insert [${incompletePolicies.length} skipped]`,
+        );
+      }
+
       console.log(
         `insertPolicies: ready to insert ${formattedPolicies.length} rows`,
         `skipping ${incompletePolicies.length} rows (no policy holder found)`,
-        incompletePolicies,
+        `First few skipped rows:`,
+        incompletePolicies.slice(0, 2),
       );
 
       const result = await ResultService.fromPromise(
-        db.insert(TABLE_InsurancePolicies).values(formattedPolicies),
+        db.transaction(async (tx) => {
+          const chunks = chunk(formattedPolicies, CHUNK_SIZE);
+          const insertResults: ResultSet[] = [];
+          for (const c of chunks) {
+            const chunkInsertResult = await tx
+              .insert(TABLE_InsurancePolicies)
+              .values(c);
+            insertResults.push(chunkInsertResult);
+          }
+          return insertResults;
+        }),
         (error) => ({
           origin: "insertPolicies",
           type: "Database error: insert policies",
@@ -163,8 +214,13 @@ export const importStatements = procedure
       );
 
       if (!result.ok) return result;
+
+      const rowsAffected = result.value.reduce(
+        (acc, r) => acc + r.rowsAffected,
+        0,
+      );
       return ResultService.ok(
-        `${result.value.rowsAffected}/${input.statement.length} - [${incompletePolicies.length} skipped]`,
+        `[${rowsAffected}/${formattedPolicies.length}] inserted - [${incompletePolicies.length} skipped]`,
       );
 
       async function getInsuranceConsultantsMap() {
