@@ -1,6 +1,6 @@
 import { ModalService } from "@renderer/services/ModalService";
 import { ReactSpreadsheetImport } from "react-spreadsheet-import";
-import { fields } from "./fields";
+import { fields } from "./fields/fields";
 import { useSubmitCompanyStatement } from "./hooks/useSubmitCompanyStatement";
 import { ImportCompanyStatementModalProps } from "./types";
 

@@ -1,13 +1,28 @@
 import { type Fields } from "react-spreadsheet-import";
+import { matchers } from "./matchers";
 
-export const fields: Fields = [
+export type FieldKeys =
+  | "policyHolderName"
+  | "policyHolderCpf"
+  | "externalPolicyId"
+  | "externalPolicyNumber"
+  | "product"
+  | "paymentInstallment"
+  | "paymentTimestamp"
+  | "paymentTotalAmount"
+  | "paymentTotalCommission"
+  | "insuranceConsultantEmail"
+  | "insuranceConsultantName"
+  | "proposalId";
+
+export const fields = [
   {
     key: "policyHolderName",
     validations: [
       { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
     ],
     label: "Nome do Segurado",
-    alternateMatches: ["Nome do Segurado", "Cliente"],
+    alternateMatches: matchers.policyHolderName,
     fieldType: {
       type: "input",
     },
@@ -19,7 +34,7 @@ export const fields: Fields = [
       { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
     ],
     label: "CPF do Segurado",
-    alternateMatches: ["CPF do Segurado", "CPF"],
+    alternateMatches: matchers.policyHolderCpf,
     fieldType: {
       type: "input",
     },
@@ -28,7 +43,7 @@ export const fields: Fields = [
   {
     key: "externalPolicyId",
     label: "ID da Apólice",
-    alternateMatches: ["ID da Apólice", "Apólice"],
+    alternateMatches: matchers.externalPolicyId,
     fieldType: {
       type: "input",
     },
@@ -37,7 +52,7 @@ export const fields: Fields = [
   {
     key: "externalPolicyNumber",
     label: "Número da Apólice",
-    alternateMatches: ["Nº da Apólice"],
+    alternateMatches: matchers.externalPolicyNumber,
     fieldType: {
       type: "input",
     },
@@ -46,7 +61,7 @@ export const fields: Fields = [
   {
     key: "product",
     label: "Produtos",
-    alternateMatches: ["Coberturas", "Produto"],
+    alternateMatches: matchers.product,
     fieldType: {
       type: "input",
     },
@@ -55,7 +70,7 @@ export const fields: Fields = [
   {
     key: "paymentInstallment",
     label: "Parcela",
-    alternateMatches: ["Parcela"],
+    alternateMatches: matchers.paymentInstallment,
     fieldType: {
       type: "input",
     },
@@ -64,7 +79,7 @@ export const fields: Fields = [
   {
     key: "paymentTimestamp",
     label: "Data do pagamento",
-    alternateMatches: ["Pagamento Comissão", "Vencimento"],
+    alternateMatches: matchers.paymentTimestamp,
     fieldType: {
       type: "input",
     },
@@ -73,7 +88,7 @@ export const fields: Fields = [
   {
     key: "paymentTotalAmount",
     label: "Valor da fatura",
-    alternateMatches: ["Valor da fatura"],
+    alternateMatches: matchers.paymentTotalAmount,
     fieldType: {
       type: "input",
     },
@@ -82,7 +97,7 @@ export const fields: Fields = [
   {
     key: "paymentTotalCommission",
     label: "Valor da comissão",
-    alternateMatches: ["Comissão Bruta", "Comissão"],
+    alternateMatches: matchers.paymentTotalCommission,
     fieldType: {
       type: "input",
     },
@@ -91,19 +106,28 @@ export const fields: Fields = [
   {
     key: "insuranceConsultantEmail",
     label: "E-mail do Consultor de Seguros",
-    alternateMatches: ["Responsável pela Venda"],
+    alternateMatches: matchers.insuranceConsultantEmail,
     fieldType: {
       type: "input",
     },
-    example: "R$100,00",
+    example: "exemplo@email.com",
+  },
+  {
+    key: "insuranceConsultantName",
+    label: "Nome do Consultor de Seguros",
+    alternateMatches: matchers.insuranceConsultantName,
+    fieldType: {
+      type: "input",
+    },
+    example: "Felipe Silva",
   },
   {
     key: "proposalId",
     label: "Número da Proposta",
-    alternateMatches: ["Nº da Proposta de Endosso", "Proposta"],
+    alternateMatches: matchers.proposalId,
     fieldType: {
       type: "input",
     },
-    example: "R$100,00",
+    example: "849456184",
   },
-];
+] as const satisfies Fields;
