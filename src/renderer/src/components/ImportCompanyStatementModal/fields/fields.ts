@@ -2,43 +2,30 @@ import { type Fields } from "react-spreadsheet-import";
 import { matchers } from "./matchers";
 
 export type FieldKeys =
-  | "policyHolderName"
-  | "policyHolderCpf"
+  | "commissionPercentage"
   | "externalPolicyId"
   | "externalPolicyNumber"
-  | "product"
+  | "insuranceConsultantEmail"
+  | "insuranceConsultantName"
   | "paymentInstallment"
   | "paymentTimestamp"
   | "paymentTotalAmount"
   | "paymentTotalCommission"
-  | "insuranceConsultantEmail"
-  | "insuranceConsultantName"
-  | "proposalId";
+  | "policyHolderCpf"
+  | "policyHolderName"
+  | "product"
+  | "proposalId"
+  | "transactionType";
 
 export const fields = [
   {
-    key: "policyHolderName",
-    validations: [
-      { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
-    ],
-    label: "Nome do Segurado",
-    alternateMatches: matchers.policyHolderName,
+    key: "commissionPercentage",
+    label: "Percentual da Comissão",
+    alternateMatches: matchers.commissionPercentage,
     fieldType: {
       type: "input",
     },
-    example: "João Silva",
-  },
-  {
-    key: "policyHolderCpf",
-    validations: [
-      { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
-    ],
-    label: "CPF do Segurado",
-    alternateMatches: matchers.policyHolderCpf,
-    fieldType: {
-      type: "input",
-    },
-    example: "123.456.789-00",
+    example: "0.05",
   },
   {
     key: "externalPolicyId",
@@ -59,13 +46,22 @@ export const fields = [
     example: "12345678910123456789",
   },
   {
-    key: "product",
-    label: "Produtos",
-    alternateMatches: matchers.product,
+    key: "insuranceConsultantEmail",
+    label: "E-mail do Consultor de Seguros",
+    alternateMatches: matchers.insuranceConsultantEmail,
     fieldType: {
       type: "input",
     },
-    example: "Seguro de Vida, Cirurgias etc.",
+    example: "exemplo@email.com",
+  },
+  {
+    key: "insuranceConsultantName",
+    label: "Nome do Consultor de Seguros",
+    alternateMatches: matchers.insuranceConsultantName,
+    fieldType: {
+      type: "input",
+    },
+    example: "Felipe Silva",
   },
   {
     key: "paymentInstallment",
@@ -104,22 +100,37 @@ export const fields = [
     example: "R$100,00",
   },
   {
-    key: "insuranceConsultantEmail",
-    label: "E-mail do Consultor de Seguros",
-    alternateMatches: matchers.insuranceConsultantEmail,
+    key: "policyHolderCpf",
+    validations: [
+      { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
+    ],
+    label: "CPF do Segurado",
+    alternateMatches: matchers.policyHolderCpf,
     fieldType: {
       type: "input",
     },
-    example: "exemplo@email.com",
+    example: "123.456.789-00",
   },
   {
-    key: "insuranceConsultantName",
-    label: "Nome do Consultor de Seguros",
-    alternateMatches: matchers.insuranceConsultantName,
+    key: "policyHolderName",
+    validations: [
+      { rule: "required", errorMessage: "Campo obrigatório", level: "error" },
+    ],
+    label: "Nome do Segurado",
+    alternateMatches: matchers.policyHolderName,
     fieldType: {
       type: "input",
     },
-    example: "Felipe Silva",
+    example: "João Silva",
+  },
+  {
+    key: "product",
+    label: "Produtos",
+    alternateMatches: matchers.product,
+    fieldType: {
+      type: "input",
+    },
+    example: "Seguro de Vida, Cirurgias etc.",
   },
   {
     key: "proposalId",
@@ -130,4 +141,32 @@ export const fields = [
     },
     example: "849456184",
   },
-] as const satisfies Fields;
+  {
+    key: "transactionType",
+    label: "Tipo de Transação",
+    alternateMatches: matchers.transactionType,
+    fieldType: {
+      type: "select",
+      options: [
+        { label: "Bônus de Agenciamento", value: "brokerageBonus" },
+        {
+          label: "Estorno do Bônus de Agenciamento",
+          value: "brokerageBonusRefund",
+        },
+        {
+          label: "Comissão de Corretagem",
+          value: "brokerageCommission",
+        },
+        {
+          label: "Outros créditos",
+          value: "genericCredit",
+        },
+        {
+          label: "Outros débitos",
+          value: "genericDebit",
+        },
+      ],
+    },
+    example: "Tipo de transação",
+  },
+] as const satisfies Fields<FieldKeys>;

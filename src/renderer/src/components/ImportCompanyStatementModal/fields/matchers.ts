@@ -4,6 +4,7 @@ import { FieldKeys } from "./fields";
 type Matchers = Record<FieldKeys, string | null>;
 
 const azos: Matchers = {
+  commissionPercentage: null,
   externalPolicyId: "ID da Apólice",
   externalPolicyNumber: "Nº da Apólice",
   insuranceConsultantEmail: "Responsável pela Venda",
@@ -16,9 +17,11 @@ const azos: Matchers = {
   policyHolderName: "Nome do Segurado",
   product: "Coberturas",
   proposalId: "Nº da Proposta de Endosso",
+  transactionType: null,
 };
 
 const icatu: Matchers = {
+  commissionPercentage: null,
   externalPolicyId: null,
   externalPolicyNumber: null,
   insuranceConsultantEmail: null,
@@ -31,9 +34,11 @@ const icatu: Matchers = {
   policyHolderName: "Cliente",
   product: "Produto",
   proposalId: "Proposta",
+  transactionType: null,
 };
 
 const mag: Matchers = {
+  commissionPercentage: null,
   externalPolicyId: "Id. Externo",
   externalPolicyNumber: null,
   insuranceConsultantEmail: null,
@@ -46,9 +51,11 @@ const mag: Matchers = {
   policyHolderName: "Cliente",
   product: "DG",
   proposalId: "Prop / Cont",
+  transactionType: null,
 };
 
 const omint: Matchers = {
+  commissionPercentage: null,
   externalPolicyId: null,
   externalPolicyNumber: "Apólice",
   insuranceConsultantEmail: null,
@@ -61,9 +68,11 @@ const omint: Matchers = {
   policyHolderName: "Segurado / Estipulante",
   product: "Produto",
   proposalId: null,
+  transactionType: null,
 };
 
 const prudential: Matchers = {
+  commissionPercentage: null,
   externalPolicyId: null,
   externalPolicyNumber: "Apólice",
   insuranceConsultantEmail: null,
@@ -76,9 +85,11 @@ const prudential: Matchers = {
   policyHolderName: "Nome do Cliente",
   product: "Produto",
   proposalId: "Proposta",
+  transactionType: null,
 };
 
 const unimed: Matchers = {
+  commissionPercentage: null,
   externalPolicyId: null,
   externalPolicyNumber: null,
   insuranceConsultantEmail: null,
@@ -91,6 +102,7 @@ const unimed: Matchers = {
   policyHolderName: null,
   product: null,
   proposalId: null,
+  transactionType: null,
 };
 
 const matchersArray = [azos, icatu, mag, omint, prudential, unimed] as const;
@@ -105,6 +117,7 @@ export const matchers = matchersArray.reduce<Record<FieldKeys, string[]>>(
     return acc;
   },
   {
+    commissionPercentage: [],
     externalPolicyId: [],
     externalPolicyNumber: [],
     insuranceConsultantEmail: [],
@@ -117,5 +130,6 @@ export const matchers = matchersArray.reduce<Record<FieldKeys, string[]>>(
     policyHolderName: [],
     product: [],
     proposalId: [],
+    transactionType: [],
   },
 );

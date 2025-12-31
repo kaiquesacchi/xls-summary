@@ -54,12 +54,12 @@ declare module "react-spreadsheet-import" {
     type: "input";
   };
 
-  type Fields = Readonly<
+  type Fields<TKey> = Readonly<
     readonly {
       /** UI-facing field label*/
       label: string;
       /** Field's unique identifier*/
-      key: string;
+      key: TKey;
       /** UI-facing additional information displayed via tooltip and ? icon*/
       description?: string;
       /** Alternate labels used for fields' auto-matching
