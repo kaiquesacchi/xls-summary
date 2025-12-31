@@ -1,4 +1,5 @@
 import { trpc } from "@renderer/utils/trpc/trpc.client";
+import { Code } from "../Code/Code";
 
 export function DatabasePanel() {
   const dbEntries = trpc.database.countDbEntries.useQuery();
@@ -11,7 +12,7 @@ export function DatabasePanel() {
   return (
     <div>
       <h3>Banco de dados</h3>
-      <pre>Registros: {JSON.stringify(dbEntries.data, null, 2)}</pre>
+      <Code code={dbEntries.data} />
       <button
         onClick={() => {
           void dbEntries.refetch();

@@ -9,8 +9,6 @@ import { initDatabase } from "./db/init";
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
@@ -19,6 +17,7 @@ function createWindow(): void {
       sandbox: false,
     },
   });
+  mainWindow.maximize();
 
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();

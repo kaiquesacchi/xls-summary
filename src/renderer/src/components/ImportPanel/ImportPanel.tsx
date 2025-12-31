@@ -1,10 +1,10 @@
-import { trpc } from "@renderer/utils/trpc/trpc.client";
-import { openImportCompanyStatementModal } from "../ImportCompanyStatementModal";
-import React from "react";
+import { Code } from "../Code/Code";
+import { useImportPanelController } from "./hooks/useImportPanelController";
 
 export function ImportPanel() {
-  const insuranceCompanies = trpc.insuranceCompanies.list.useQuery();
-  const insuranceCompaniesSelectRef = React.useRef<HTMLSelectElement>(null);
+  const { insuranceCompaniesSelectRef, transactionTypesRef, ...controller } =
+    useImportPanelController();
+
   return (
     <div>
       <h3>Importar planilha de seguradora</h3>
@@ -17,24 +17,24 @@ export function ImportPanel() {
         }}
       >
         <select name="Seguradora" ref={insuranceCompaniesSelectRef}>
-          {insuranceCompanies.data?.map((company) => (
+          {controller.insuranceCompanies.data?.map((company) => (
             <option key={company.id} value={company.id}>
               {company.name}
             </option>
           ))}
         </select>
-
-        <button
-          onClick={() => {
-            openImportCompanyStatementModal({
-              insuranceCompanyId: Number(
-                insuranceCompaniesSelectRef.current?.value,
-              ),
-            });
-          }}
-        >
-          Importar planilha
+        <select name="Tipo de transação" ref={transactionTypesRef}>
+          {controller.transactionTypes.map((type) => (
+            <option key={type.key} value={type.key}>
+              {type.label}
+            </option>
+          ))}
+        </select>
+        <button onClick={controller.insuranceCompanies.refetch}>
+          Recarregar lista de empresas
         </button>
+        <button onClick={controller.openImportModal}>Importar planilha</button>
+        <Code code={controller.importResult} />
       </div>
     </div>
   );

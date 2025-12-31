@@ -20,16 +20,15 @@ export function useSubmitCompanyStatement(
     await importStatement
       .mutateAsync({
         insuranceCompanyId: input.insuranceCompanyId,
-        statement: parsed.data.slice(0, 100),
+        statement: parsed.data.slice(0, 50),
       })
       .then((data) => {
         console.log("THEN", data);
+        input.setImportResult(data);
       })
       .catch((error) => {
+        alert((error as { message: string }).message);
         console.error("CATCH", error);
-      })
-      .finally(() => {
-        console.log("FINALLY");
       });
   };
 }

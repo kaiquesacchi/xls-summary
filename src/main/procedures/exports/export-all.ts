@@ -12,7 +12,7 @@ const SHEET_NAME = "Transações";
 
 export const exportAll = procedure.mutation(async () => {
   const data = await fetchData();
-  console.log(data);
+  console.log("First records...", data.slice(0, 2));
   await writeToFile(data);
 });
 
