@@ -13,9 +13,10 @@ CREATE TABLE `insurance_consultants` (
 --> statement-breakpoint
 CREATE UNIQUE INDEX `insurance_consultants_cpf_unique` ON `insurance_consultants` (`cpf`);--> statement-breakpoint
 CREATE UNIQUE INDEX `insurance_consultants_email_unique` ON `insurance_consultants` (`email`);--> statement-breakpoint
-CREATE TABLE `insurance_policies` (
+CREATE TABLE `transactions` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`proposalId` text,
+	`commissionPercentage` integer,
+	`externalProposalId` text,
 	`externalPolicyId` text,
 	`externalPolicyNumber` text,
 	`product` text,
@@ -23,6 +24,7 @@ CREATE TABLE `insurance_policies` (
 	`paymentTimestamp` integer,
 	`paymentTotalAmount` integer,
 	`paymentTotalCommission` integer,
+	`transactionType` text,
 	`policyHolderId` integer NOT NULL,
 	`insuranceCompanyId` integer NOT NULL,
 	`insuranceConsultantId` integer,

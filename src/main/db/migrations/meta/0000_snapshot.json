@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "1d6de6ea-125c-4f7a-8576-409515f3941b",
+  "id": "97eed794-6fd4-4d92-9cb3-51d5252149f7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "insurance_companies": {
@@ -89,8 +89,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "insurance_policies": {
-      "name": "insurance_policies",
+    "transactions": {
+      "name": "transactions",
       "columns": {
         "id": {
           "name": "id",
@@ -99,8 +99,15 @@
           "notNull": true,
           "autoincrement": true
         },
-        "proposalId": {
-          "name": "proposalId",
+        "commissionPercentage": {
+          "name": "commissionPercentage",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "externalProposalId": {
+          "name": "externalProposalId",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -155,6 +162,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "transactionType": {
+          "name": "transactionType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "policyHolderId": {
           "name": "policyHolderId",
           "type": "integer",
@@ -186,9 +200,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "insurance_policies_policyHolderId_policy_holders_id_fk": {
-          "name": "insurance_policies_policyHolderId_policy_holders_id_fk",
-          "tableFrom": "insurance_policies",
+        "transactions_policyHolderId_policy_holders_id_fk": {
+          "name": "transactions_policyHolderId_policy_holders_id_fk",
+          "tableFrom": "transactions",
           "tableTo": "policy_holders",
           "columnsFrom": [
             "policyHolderId"
@@ -199,9 +213,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "insurance_policies_insuranceCompanyId_insurance_companies_id_fk": {
-          "name": "insurance_policies_insuranceCompanyId_insurance_companies_id_fk",
-          "tableFrom": "insurance_policies",
+        "transactions_insuranceCompanyId_insurance_companies_id_fk": {
+          "name": "transactions_insuranceCompanyId_insurance_companies_id_fk",
+          "tableFrom": "transactions",
           "tableTo": "insurance_companies",
           "columnsFrom": [
             "insuranceCompanyId"
@@ -212,9 +226,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "insurance_policies_insuranceConsultantId_insurance_consultants_id_fk": {
-          "name": "insurance_policies_insuranceConsultantId_insurance_consultants_id_fk",
-          "tableFrom": "insurance_policies",
+        "transactions_insuranceConsultantId_insurance_consultants_id_fk": {
+          "name": "transactions_insuranceConsultantId_insurance_consultants_id_fk",
+          "tableFrom": "transactions",
           "tableTo": "insurance_consultants",
           "columnsFrom": [
             "insuranceConsultantId"
@@ -225,9 +239,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "insurance_policies_investmentConsultantId_investment_consultants_id_fk": {
-          "name": "insurance_policies_investmentConsultantId_investment_consultants_id_fk",
-          "tableFrom": "insurance_policies",
+        "transactions_investmentConsultantId_investment_consultants_id_fk": {
+          "name": "transactions_investmentConsultantId_investment_consultants_id_fk",
+          "tableFrom": "transactions",
           "tableTo": "investment_consultants",
           "columnsFrom": [
             "investmentConsultantId"

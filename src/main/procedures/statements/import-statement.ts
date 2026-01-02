@@ -4,7 +4,7 @@ import { TABLE_PolicyHolders } from "../../db/schemas/policy-holders";
 import { procedure } from "../../trpc/trpc.server";
 import * as z from "zod";
 import { TABLE_InsuranceConsultants } from "../../db/schemas/insurance-consultants";
-import { TABLE_InsurancePolicies } from "../../db/schemas/insurance-policies";
+import { TABLE_Transactions } from "../../db/schemas/insurance-policies";
 import { ResultService } from "../../../shared/services/ResultService";
 import { DateParsers } from "../../../shared/parsers/DateParsers";
 import { CurrencyParsers } from "../../../shared/parsers/CurrencyParsers/CurrencyParsers";
@@ -26,6 +26,7 @@ const StatementRowSchema = z.object({
   paymentTotalAmount: z.string().optional(),
   paymentTotalCommission: z.string().optional(),
   proposalId: z.string().optional(),
+  transactionType: z.string().optional(),
   /* ----------------------- Insurance Consultant data ---------------------- */
   insuranceConsultantEmail: z.string().optional(),
 });
@@ -34,7 +35,11 @@ type StatementRow = z.infer<typeof StatementRowSchema>;
 export const StatementSchema = z.array(StatementRowSchema);
 
 const InputSchema = z.object({
-  insuranceCompanyId: z.number(),
+  /** Values used as default when the spreadsheet doesn't provide them */
+  defaultValues: z.object({
+    insuranceCompanyId: z.number(),
+    transactionType: z.string().optional(),
+  }),
   statement: StatementSchema,
 });
 
@@ -200,7 +205,7 @@ export const importStatements = procedure
           const insertResults: ResultSet[] = [];
           for (const c of chunks) {
             const chunkInsertResult = await tx
-              .insert(TABLE_InsurancePolicies)
+              .insert(TABLE_Transactions)
               .values(c);
             insertResults.push(chunkInsertResult);
           }
@@ -275,7 +280,7 @@ export const importStatements = procedure
       /** Format policies to be inserted. Skips incomplete policies */
       function formatPolicies() {
         const incompletePolicies: StatementRow[] = [];
-        const formattedPolicies: (typeof TABLE_InsurancePolicies.$inferInsert)[] =
+        const formattedPolicies: (typeof TABLE_Transactions.$inferInsert)[] =
           [];
 
         input.statement.forEach((row) => {
@@ -284,6 +289,7 @@ export const importStatements = procedure
           const paymentTimestamp = getPaymentTimestamp(row);
           const paymentTotalAmount = getPaymentTotalAmount(row);
           const paymentTotalCommission = getPaymentTotalCommission(row);
+          const transactionType = getTransactionType(row);
 
           /** Checks if:
            * - Required fields are present
@@ -293,7 +299,8 @@ export const importStatements = procedure
             !policyHolderId ||
             !paymentTimestamp.ok ||
             !paymentTotalAmount.ok ||
-            !paymentTotalCommission.ok
+            !paymentTotalCommission.ok ||
+            !transactionType.ok
           ) {
             incompletePolicies.push(row);
             return;
@@ -301,7 +308,7 @@ export const importStatements = procedure
 
           formattedPolicies.push({
             // Policy
-            proposalId: row.proposalId,
+            externalProposalId: row.proposalId,
             externalPolicyId: row.externalPolicyId,
             externalPolicyNumber: row.externalPolicyNumber,
             product: row.product,
@@ -309,9 +316,10 @@ export const importStatements = procedure
             paymentTimestamp: paymentTimestamp.value,
             paymentTotalAmount: paymentTotalAmount.value,
             paymentTotalCommission: paymentTotalCommission.value,
+            transactionType: transactionType.value,
 
             // Insurance company
-            insuranceCompanyId: input.insuranceCompanyId,
+            insuranceCompanyId: input.defaultValues.insuranceCompanyId,
 
             // Insurance consultant
             insuranceConsultantId,
@@ -348,6 +356,23 @@ export const importStatements = procedure
         function getPaymentTotalCommission(row: StatementRow) {
           if (!row.paymentTotalCommission) return ResultService.ok(null);
           return CurrencyParsers.fromDirtyString(row.paymentTotalCommission);
+        }
+
+        function getTransactionType(row: StatementRow) {
+          if (row.transactionType) return ResultService.ok(row.transactionType);
+          if (input.defaultValues.transactionType)
+            return ResultService.ok(input.defaultValues.transactionType);
+          return ResultService.error({
+            origin: "import-statement",
+            type: "Missing transaction type",
+            error: {
+              message: "Transaction type is missing",
+              cause: JSON.stringify(row),
+              name: "MissingTransactionType",
+              stack: "",
+              stringifiedError: "",
+            },
+          });
         }
       }
     }

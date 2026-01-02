@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../db/db";
-import { TABLE_InsurancePolicies } from "../../db/schemas/insurance-policies";
+import { TABLE_Transactions } from "../../db/schemas/insurance-policies";
 import { TABLE_PolicyHolders } from "../../db/schemas/policy-holders";
 import { procedure } from "../../trpc/trpc.server";
 import * as xlsx from "xlsx";
@@ -20,15 +20,17 @@ async function fetchData() {
   const result = await db
     .select({
       // Insurance Policy
-      id: TABLE_InsurancePolicies.id,
-      "ID da proposta": TABLE_InsurancePolicies.proposalId,
-      "[ext] ID da apólice": TABLE_InsurancePolicies.externalPolicyId,
-      "[ext] Número da apólice": TABLE_InsurancePolicies.externalPolicyNumber,
-      Produto: TABLE_InsurancePolicies.product,
-      Parcela: TABLE_InsurancePolicies.paymentInstallment,
-      "Data do pagamento": TABLE_InsurancePolicies.paymentTimestamp,
-      "Total pago": TABLE_InsurancePolicies.paymentTotalAmount,
-      "Total da comissão": TABLE_InsurancePolicies.paymentTotalCommission,
+      id: TABLE_Transactions.id,
+      "[ext] ID da proposta": TABLE_Transactions.externalProposalId,
+      "[ext] ID da apólice": TABLE_Transactions.externalPolicyId,
+      "[ext] Número da apólice": TABLE_Transactions.externalPolicyNumber,
+      Produto: TABLE_Transactions.product,
+      Parcela: TABLE_Transactions.paymentInstallment,
+      "Data do pagamento": TABLE_Transactions.paymentTimestamp,
+      "Total pago": TABLE_Transactions.paymentTotalAmount,
+      "Total da comissão": TABLE_Transactions.paymentTotalCommission,
+      "Porcentagem da comissão": TABLE_Transactions.commissionPercentage,
+      "Tipo de transação": TABLE_Transactions.transactionType,
 
       // Insurance Company
       Seguradora: TABLE_InsuranceCompanies.name,
@@ -42,23 +44,20 @@ async function fetchData() {
       "[Cliente] CPF": TABLE_PolicyHolders.cpf,
       "[Cliente] Nome": TABLE_PolicyHolders.name,
     })
-    .from(TABLE_InsurancePolicies)
+    .from(TABLE_Transactions)
     .leftJoin(
       TABLE_PolicyHolders,
-      eq(TABLE_PolicyHolders.id, TABLE_InsurancePolicies.policyHolderId),
+      eq(TABLE_PolicyHolders.id, TABLE_Transactions.policyHolderId),
     )
     .leftJoin(
       TABLE_InsuranceCompanies,
-      eq(
-        TABLE_InsuranceCompanies.id,
-        TABLE_InsurancePolicies.insuranceCompanyId,
-      ),
+      eq(TABLE_InsuranceCompanies.id, TABLE_Transactions.insuranceCompanyId),
     )
     .leftJoin(
       TABLE_InsuranceConsultants,
       eq(
         TABLE_InsuranceConsultants.id,
-        TABLE_InsurancePolicies.insuranceConsultantId,
+        TABLE_Transactions.insuranceConsultantId,
       ),
     );
 

@@ -4,9 +4,10 @@ import { TABLE_InsuranceCompanies } from "./insurance-companies";
 import { TABLE_InsuranceConsultants } from "./insurance-consultants";
 import { TABLE_InvestmentConsultants } from "./investment-consultants";
 
-export const TABLE_InsurancePolicies = sqliteTable("insurance_policies", {
+export const TABLE_Transactions = sqliteTable("transactions", {
   id: int().primaryKey({ autoIncrement: true }),
-  proposalId: text(),
+  commissionPercentage: int(),
+  externalProposalId: text(),
   externalPolicyId: text(),
   externalPolicyNumber: text(),
   product: text(),
@@ -14,6 +15,7 @@ export const TABLE_InsurancePolicies = sqliteTable("insurance_policies", {
   paymentTimestamp: int({ mode: "timestamp" }),
   paymentTotalAmount: int(),
   paymentTotalCommission: int(),
+  transactionType: text(),
 
   // Foreign keys
   policyHolderId: int()

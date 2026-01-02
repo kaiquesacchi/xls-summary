@@ -11,9 +11,18 @@ const MIGRATIONS_FOLDER = app.isPackaged
 
 export async function initDatabase() {
   console.log(
-    `Initializing database... [${app.isPackaged ? "PACKAGED" : "NOT_PACKAGED"}] ${MIGRATIONS_FOLDER}`,
+    `[database init] Starting. App is ${app.isPackaged ? "PACKAGED" : "NOT_PACKAGED"}. Using ${MIGRATIONS_FOLDER}`,
   );
+  const result = await init();
+  if (result.ok) {
+    console.log(`✅ [database init]: ${result.value}`);
+  } else {
+    console.log(`❌ [database init]:`, result.error);
+  }
+  return result;
+}
 
+async function init() {
   const migrationResult = await ResultService.fromPromise(
     migrate(db, {
       migrationsFolder: MIGRATIONS_FOLDER,

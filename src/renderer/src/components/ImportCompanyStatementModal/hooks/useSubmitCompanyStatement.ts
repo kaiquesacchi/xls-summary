@@ -19,8 +19,11 @@ export function useSubmitCompanyStatement(
     console.log(`Parsing successful: ${parsed.data.length.toString()} rows`);
     await importStatement
       .mutateAsync({
-        insuranceCompanyId: input.insuranceCompanyId,
         statement: parsed.data,
+        defaultValues: {
+          insuranceCompanyId: input.insuranceCompanyId,
+          transactionType: input.transactionType,
+        },
       })
       .then((data) => {
         console.log("THEN", data);

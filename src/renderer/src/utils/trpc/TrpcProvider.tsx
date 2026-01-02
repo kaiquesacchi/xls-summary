@@ -5,7 +5,16 @@ import React from "react";
 
 /** Wraps the app with TRPC and React Query's context providers */
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+          },
+        },
+      }),
+  );
   const [trpcClient] = React.useState(() =>
     trpc.createClient({
       links: [ipcLink()],
