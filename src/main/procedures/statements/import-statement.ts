@@ -7,7 +7,7 @@ import { TABLE_InsuranceConsultants } from "../../db/schemas/insurance-consultan
 import { TABLE_InsurancePolicies } from "../../db/schemas/insurance-policies";
 import { ResultService } from "../../../shared/services/ResultService";
 import { DateParsers } from "../../../shared/parsers/DateParsers";
-import { CurrencyParsers } from "../../../shared/parsers/CurrencyParsers";
+import { CurrencyParsers } from "../../../shared/parsers/CurrencyParsers/CurrencyParsers";
 import chunk from "lodash/chunk";
 import { type ResultSet } from "@libsql/client";
 

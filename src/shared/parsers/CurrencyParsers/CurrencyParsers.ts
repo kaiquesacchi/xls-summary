@@ -1,11 +1,11 @@
-import { ResultService } from "../services/ResultService";
+import { ResultService } from "../../services/ResultService";
 
 export const CurrencyParsers = { fromDirtyString };
 
 function fromDirtyString(input: string) {
-  const match = /-?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d+)?|-?\d+(?:[.,]\d+)?/.exec(
-    input,
-  );
+  const isNegative = /-\s*[^\d]*\d/.test(input);
+
+  const match = /\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?/.exec(input);
 
   if (!match) {
     return ResultService.error({
@@ -38,7 +38,7 @@ function fromDirtyString(input: string) {
     numeric = numeric.replace(/,/g, "");
   }
 
-  const numberValue = Number(numeric);
+  let numberValue = Number(numeric);
 
   if (Number.isNaN(numberValue)) {
     return ResultService.error({
@@ -54,5 +54,6 @@ function fromDirtyString(input: string) {
     });
   }
 
+  if (isNegative) numberValue *= -1;
   return ResultService.ok(Math.round(numberValue * 100));
 }
