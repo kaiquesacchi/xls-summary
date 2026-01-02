@@ -4,7 +4,7 @@ import { TABLE_PolicyHolders } from "../../db/schemas/policy-holders";
 import { procedure } from "../../trpc/trpc.server";
 import * as z from "zod";
 import { TABLE_InsuranceConsultants } from "../../db/schemas/insurance-consultants";
-import { TABLE_Transactions } from "../../db/schemas/insurance-policies";
+import { TABLE_Transactions } from "../../db/schemas/transactions";
 import { ResultService } from "../../../shared/services/ResultService";
 import { DateParsers } from "../../../shared/parsers/DateParsers";
 import { CurrencyParsers } from "../../../shared/parsers/CurrencyParsers/CurrencyParsers";

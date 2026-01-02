@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../db/db";
-import { TABLE_Transactions } from "../../db/schemas/insurance-policies";
+import { TABLE_Transactions } from "../../db/schemas/transactions";
 import { TABLE_PolicyHolders } from "../../db/schemas/policy-holders";
 import { procedure } from "../../trpc/trpc.server";
 import * as xlsx from "xlsx";
