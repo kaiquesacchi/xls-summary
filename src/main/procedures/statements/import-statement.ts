@@ -38,7 +38,7 @@ const InputSchema = z.object({
   /** Values used as default when the spreadsheet doesn't provide them */
   defaultValues: z.object({
     insuranceCompanyId: z.number(),
-    transactionType: z.string().optional(),
+    transactionType: z.string().nullable(),
   }),
   statement: StatementSchema,
 });
@@ -313,7 +313,7 @@ export const importStatements = procedure
             externalPolicyNumber: row.externalPolicyNumber,
             product: row.product,
             paymentInstallment: row.paymentInstallment,
-            paymentTimestamp: paymentTimestamp.value,
+            paymentTimestamp: paymentTimestamp.value?.toJSDate(),
             paymentTotalAmount: paymentTotalAmount.value,
             paymentTotalCommission: paymentTotalCommission.value,
             transactionType: transactionType.value,
@@ -359,6 +359,11 @@ export const importStatements = procedure
         }
 
         function getTransactionType(row: StatementRow) {
+          console.log(
+            "valores: ",
+            row.transactionType,
+            input.defaultValues.transactionType,
+          );
           if (row.transactionType) return ResultService.ok(row.transactionType);
           if (input.defaultValues.transactionType)
             return ResultService.ok(input.defaultValues.transactionType);

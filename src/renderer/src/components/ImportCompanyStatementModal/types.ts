@@ -2,6 +2,6 @@ import { TransactionType } from "src/shared/concepts/TransactionTypes";
 
 export type ImportCompanyStatementModalProps = {
   insuranceCompanyId: number;
-  transactionType: TransactionType | undefined;
+  transactionType: TransactionType | null;
   setImportResult: (data: object) => void;
 };

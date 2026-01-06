@@ -34,16 +34,23 @@ export function useImportPanelController() {
   function openImportModal() {
     openImportCompanyStatementModal({
       insuranceCompanyId: Number(insuranceCompaniesSelectRef.current?.value),
-      transactionType: transactionTypesRef.current
-        ?.value as (typeof transactionTypes)[number]["key"],
+      transactionType: getSelectedTransactionType(),
       setImportResult,
     });
   }
 
   function getTransactionTypes() {
     return [
-      { label: "Inferir da planilha", key: undefined },
+      { label: "Inferir da planilha", key: "" },
       ...TransactionTypes.list,
     ] as const;
+  }
+
+  function getSelectedTransactionType() {
+    if (!transactionTypesRef.current?.value) return null;
+    return transactionTypesRef.current.value as Exclude<
+      (typeof transactionTypes)[number]["key"],
+      ""
+    >;
   }
 }
