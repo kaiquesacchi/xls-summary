@@ -31,7 +31,7 @@ function error<ErrorType extends string>(
   return { ok: false, error } as const;
 }
 
-type Result<Success, ErrorType extends string> = Readonly<
+export type Result<Success, ErrorType extends string> = Readonly<
   | {
       ok: true;
       value: Success;

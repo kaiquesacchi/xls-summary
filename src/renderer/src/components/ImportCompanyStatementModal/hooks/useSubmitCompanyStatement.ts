@@ -6,7 +6,7 @@ import { ImportCompanyStatementModalProps } from "../types";
 export function useSubmitCompanyStatement(
   input: ImportCompanyStatementModalProps,
 ) {
-  const importStatement = trpc.statements.importStatements.useMutation();
+  const importStatement = trpc.imports.importStatements.useMutation();
 
   return async function submitCompanyStatement(rawData: Result<string>) {
     const parsed = StatementSchema.safeParse(rawData.validData);

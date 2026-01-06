@@ -4,7 +4,8 @@ export const TABLE_InvestmentConsultants = sqliteTable(
   "investment_consultants",
   {
     id: int().primaryKey({ autoIncrement: true }),
-    cpf: text().notNull().unique(),
+    cpf: text().unique(),
+    email: text().notNull().unique(),
     name: text().notNull(),
   },
 );

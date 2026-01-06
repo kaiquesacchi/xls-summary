@@ -13,6 +13,22 @@ CREATE TABLE `insurance_consultants` (
 --> statement-breakpoint
 CREATE UNIQUE INDEX `insurance_consultants_cpf_unique` ON `insurance_consultants` (`cpf`);--> statement-breakpoint
 CREATE UNIQUE INDEX `insurance_consultants_email_unique` ON `insurance_consultants` (`email`);--> statement-breakpoint
+CREATE TABLE `investment_consultants` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`cpf` text,
+	`email` text NOT NULL,
+	`name` text NOT NULL
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `investment_consultants_cpf_unique` ON `investment_consultants` (`cpf`);--> statement-breakpoint
+CREATE UNIQUE INDEX `investment_consultants_email_unique` ON `investment_consultants` (`email`);--> statement-breakpoint
+CREATE TABLE `policy_holders` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`cpf` text NOT NULL,
+	`name` text NOT NULL
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `policy_holders_cpf_unique` ON `policy_holders` (`cpf`);--> statement-breakpoint
 CREATE TABLE `transactions` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`commissionPercentage` integer,
@@ -34,18 +50,3 @@ CREATE TABLE `transactions` (
 	FOREIGN KEY (`insuranceConsultantId`) REFERENCES `insurance_consultants`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`investmentConsultantId`) REFERENCES `investment_consultants`(`id`) ON UPDATE no action ON DELETE no action
 );
---> statement-breakpoint
-CREATE TABLE `investment_consultants` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`cpf` text NOT NULL,
-	`name` text NOT NULL
-);
---> statement-breakpoint
-CREATE UNIQUE INDEX `investment_consultants_cpf_unique` ON `investment_consultants` (`cpf`);--> statement-breakpoint
-CREATE TABLE `policy_holders` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`cpf` text NOT NULL,
-	`name` text NOT NULL
-);
---> statement-breakpoint
-CREATE UNIQUE INDEX `policy_holders_cpf_unique` ON `policy_holders` (`cpf`);

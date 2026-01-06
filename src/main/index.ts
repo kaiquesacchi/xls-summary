@@ -5,6 +5,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import { appRouter } from "./procedures";
 import { initDatabase } from "./db/init";
+import { createContext } from "./trpc/context/createContext";
 
 function createWindow(): void {
   // Create the browser window.
@@ -37,7 +38,7 @@ function createWindow(): void {
   }
 
   // TRPC setup
-  createIPCHandler({ windows: [mainWindow], router: appRouter });
+  createIPCHandler({ windows: [mainWindow], router: appRouter, createContext });
 }
 
 // This method will be called when Electron has finished

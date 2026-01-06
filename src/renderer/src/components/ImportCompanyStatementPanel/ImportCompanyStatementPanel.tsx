@@ -1,7 +1,7 @@
 import { Code } from "../Code/Code";
 import { useImportPanelController } from "./hooks/useImportPanelController";
 
-export function ImportPanel() {
+export function ImportCompanyStatementPanel() {
   const { insuranceCompaniesSelectRef, transactionTypesRef, ...controller } =
     useImportPanelController();
 

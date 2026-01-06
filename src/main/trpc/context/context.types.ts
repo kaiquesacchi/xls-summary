@@ -1,3 +1,8 @@
+import { PropertyPath } from "lodash";
+
 export type Context = {
-  execLog: Record<string, unknown>;
+  execLog: {
+    log: Record<string, unknown>;
+    set: (path: PropertyPath, value: unknown) => void;
+  };
 };
